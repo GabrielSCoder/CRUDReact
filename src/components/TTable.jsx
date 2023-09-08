@@ -7,11 +7,12 @@ const url = "https://api.box3.work/api/Contato";
 
 function ShowTable(props) 
 {
-    const {dados, openModal, handleDelete} = props
+    const {dados, openModal, confirmDelete} = props
 
     return (
         <>
-        <main className="d-flex flex-column align-items-center shadow p-5 m-2" style={{ height: '70vh', width: '100%' }}>
+        <main className="d-flex flex-column align-items-center shadow p-5 m-2" style={{ minheight: '70vh', width: '100%' }}>
+            <button type="button" class="btn btn-secondary mb-1" id="Cadastro" onClick={() => openModal("")}>Cadastrar Contato</button>
             <table className="w-100" id="table">
             <thead>
                 <tr>
@@ -33,19 +34,13 @@ function ShowTable(props)
                     <td className="text-center">{new Date(item.dataNascimento).toLocaleDateString("pt-BR")}</td>
                     <td className="d-flex justify-content-between">
                     <button type="button" className="btn btn-primary" onClick={() => openModal(item)}>Editar</button>
-                    <button type="button" className="btn btn-danger" onClick={() => handleDelete(item.id)}>Excluir</button>
+                    <button type="button" className="btn btn-danger" onClick={() => confirmDelete(item.id)}>Excluir</button>
                     </td>
                 </tr>
                 ))}
             </tbody>
-            </table>           
+            </table>    
         </main>
-        <div class="fixed-bottom d-flex flex-column align-items-center justify-content-center">
-            <footer>
-                <button type="button" class="btn btn-secondary" id="Cadastro" onClick={() => openModal("")} >Cadastrar Contato</button>    
-                <p class="text-center text-muted m-0">Por Gabriel Sena</p>
-            </footer>
-        </div>
         </>
     )
 }
@@ -125,13 +120,20 @@ function InitTable()
         })
         .catch(() => { console.log("Ocorreu um erro na atualização.") })
     }
+
+    const confirmDelete = (id) => {
+       const dlt = window.confirm("Tem certeza que deseja excluir?");
+       
+       if (dlt)
+        handleDelete(id);
+    }
     
     return (
         <div>
             {dados.length > 0 ? (
                 <>
-                <ShowTable dados={dados} handleDelete={handleDelete} openModal={openModal} />
-                <Modal isOpen={isModalOpen} onClose={closeModal}  handleUpdate={handleUpdate} clientData={clientData} handleCreate={handleCreate}/>
+                <ShowTable dados={dados} handleDelete={handleDelete} openModal={openModal} confirmDelete={confirmDelete} />
+                <Modal isOpen={isModalOpen} onClose={closeModal} handleUpdate={handleUpdate} clientData={clientData} handleCreate={handleCreate}/>
                 </>
             ) : (
                 <p>Carregando dados...</p>
