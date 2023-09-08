@@ -10,7 +10,7 @@ function ShowTable(props)
     const {dados, openModal, handleDelete} = props
 
     return (
-
+        <>
         <main className="d-flex flex-column align-items-center shadow p-5 m-2" style={{ height: '70vh', width: '100%' }}>
             <table className="w-100" id="table">
             <thead>
@@ -38,8 +38,15 @@ function ShowTable(props)
                 </tr>
                 ))}
             </tbody>
-            </table>
+            </table>           
         </main>
+        <div class="fixed-bottom d-flex flex-column align-items-center justify-content-center">
+            <footer>
+                <button type="button" class="btn btn-secondary" id="Cadastro" onClick={() => openModal("")} >Cadastrar Contato</button>    
+                <p class="text-center text-muted m-0">Por Gabriel Sena</p>
+            </footer>
+        </div>
+        </>
     )
 }
 
@@ -71,6 +78,20 @@ function InitTable()
     useEffect(() => {
         fecthData()
     }, []);
+
+    const handleCreate = (data) => {
+        fetch(`${url}/${token}`, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then(() => {
+            fecthData()
+        })
+        .catch((e) => { console.error(e) })
+    }    
 
     const handleDelete = (clientId) =>
     {
@@ -110,7 +131,7 @@ function InitTable()
             {dados.length > 0 ? (
                 <>
                 <ShowTable dados={dados} handleDelete={handleDelete} openModal={openModal} />
-                <Modal isOpen={isModalOpen} onClose={closeModal}  handleUpdate={handleUpdate} clientData={clientData} />
+                <Modal isOpen={isModalOpen} onClose={closeModal}  handleUpdate={handleUpdate} clientData={clientData} handleCreate={handleCreate}/>
                 </>
             ) : (
                 <p>Carregando dados...</p>

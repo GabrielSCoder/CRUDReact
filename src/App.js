@@ -10,7 +10,6 @@ function myApp()
         <>
             <Head />
             <TTable />
-            <Down />
         </>
     )
 }
