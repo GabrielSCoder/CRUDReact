@@ -41,34 +41,33 @@ function TabelaComDados(props) {
 }
   
 function FillTable() {
-const [dados, setDados] = useState(null);
+    const [dados, setDados] = useState(null);
 
-useEffect(() => {
-    async function fetchData() {
-    try {
-        const res = await fetch(`${url}/${token}`);
-        if (!res.ok) {
-        throw new Error('Erro ao buscar os dados');
+    useEffect(() => {
+        async function fetchData() {
+        try {
+            const res = await fetch(`${url}/${token}`);
+            if (!res.ok) {
+            throw new Error('Erro ao buscar os dados');
+            }
+            const json = await res.json();
+            setDados(json);
+        } catch (e) {
+            console.error(e);
         }
-        const json = await res.json();
-        setDados(json);
-    } catch (e) {
-        console.error(e);
-    }
-    }
-
+        }
     fetchData();
-}, []);
+    }, []);
 
-return (
-    <div>
-    {dados ? (
-        <TabelaComDados dados={dados} />
-    ) : (
-        <p>Carregando dados...</p>
-    )}
-    </div>
-);
+    return (
+        <div>
+        {dados ? (
+            <TabelaComDados dados={dados} />
+        ) : (
+            <p>Carregando dados...</p>
+        )}
+        </div>
+    );
 }
 
 export default FillTable;
