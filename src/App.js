@@ -1,8 +1,7 @@
 import Head from './components/Head'
-import Down from './components/Down'
 import TTable from './components/TTable'
 
-import './index.css'
+import './style/index.css'
 
 function myApp()
 {

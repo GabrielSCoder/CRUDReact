@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Modal from './Modal'
-import TableHead from "./TableHead"
+import RadiModal from './RadiModal';
+import TableHead from './TableHead';
+import AlertDialog from './Alert';
 
-const token = "6d573016-d980-4275-b513-60b6e3c1e9fb";
 const url = "https://api.box3.work/api/Contato";
+const token = "6d573016-d980-4275-b513-60b6e3c1e9fb";
 
 function ShowTable(props) 
 {
@@ -11,9 +12,10 @@ function ShowTable(props)
 
     return (
         <>
-        <main className="d-flex flex-column align-items-center shadow p-5 m-2" style={{ minheight: '70vh', width: '100%' }}>
-            <button type="button" class="btn btn-secondary mb-1" id="Cadastro" onClick={() => openModal("")}>Cadastrar Contato</button>
-            <table className="w-100" id="table">
+        <main class="d-flex flex-column align-items-center shadow p-3 m-2" style={{ minheight: '70vh', width: '100%' }}>
+            <button type="button" class="btn btn-dark mb-1" id="Cadastro" onClick={() => openModal("")}>Cadastrar Contato</button>
+            <br></br>
+            <table class="w-100 table-striped table" id="table">
             <thead>
                 <tr>
                 <TableHead label="Nome" />
@@ -33,8 +35,8 @@ function ShowTable(props)
                     <td className="text-center">{item.ativo ? <span>Ativado</span> : <span>Desativado</span>}</td>
                     <td className="text-center">{new Date(item.dataNascimento).toLocaleDateString("pt-BR")}</td>
                     <td className="d-flex justify-content-between">
-                    <button type="button" className="btn btn-primary" onClick={() => openModal(item)}>Editar</button>
-                    <button type="button" className="btn btn-danger" onClick={() => confirmDelete(item.id)}>Excluir</button>
+                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => openModal(item)}>Editar</button>
+                    <button type="button" className="btn btn-danger btn-sm" onClick={() => confirmDelete(item.id)}>Excluir</button>
                     </td>
                 </tr>
                 ))}
@@ -50,6 +52,8 @@ function InitTable()
     const [dados, setDados] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [clientData, setClientData] = useState(null);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    
 
     const openModal = (client) => {
         setClientData(client);
@@ -122,18 +126,24 @@ function InitTable()
     }
 
     const confirmDelete = (id) => {
-       const dlt = window.confirm("Tem certeza que deseja excluir?");
-       
-       if (dlt)
-        handleDelete(id);
-    }
-    
+        setClientData(id);
+        setShowDeleteDialog(true);
+    };
+
+    const onConfirmDelete = () => {
+        if (clientData) {
+            handleDelete(clientData);
+        }
+        setShowDeleteDialog(false);
+    };
+
     return (
         <div>
             {dados.length > 0 ? (
                 <>
-                <ShowTable dados={dados} handleDelete={handleDelete} openModal={openModal} confirmDelete={confirmDelete} />
-                <Modal isOpen={isModalOpen} onClose={closeModal} handleUpdate={handleUpdate} clientData={clientData} handleCreate={handleCreate}/>
+                <ShowTable dados={dados} openModal={openModal} confirmDelete={confirmDelete} />
+                <RadiModal isOpen={isModalOpen} onClose={closeModal} handleUpdate={handleUpdate} clientData={clientData} handleCreate={handleCreate}/>
+                <AlertDialog isOpen={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} onConfirmDelete={onConfirmDelete}/>
                 </>
             ) : (
                 <p>Carregando dados...</p>
