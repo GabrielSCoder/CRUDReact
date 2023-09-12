@@ -4,8 +4,6 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import "../style/radMod.css";
 
-
-
 function Modal({ isOpen, onClose, clientData, handleUpdate, handleCreate})
 {   
     const isEditing = !!clientData;
@@ -46,10 +44,22 @@ function Modal({ isOpen, onClose, clientData, handleUpdate, handleCreate})
 
     const confirm = () => {
         
+
         if (!nome || !telefone || !email || !dataNascimento)
         {   
             alert("Preencha todos os campos!");
             return;
+        }
+
+        if (telefone.length > 15)
+        {
+          setTelefone(telefone.substring(0,13));
+        }
+
+        if (telefone.length < 15)
+        {
+          alert("Numero inválido!");
+          return;
         }
 
         const updatedClient = {
@@ -80,7 +90,7 @@ function Modal({ isOpen, onClose, clientData, handleUpdate, handleCreate})
         <Dialog.Root defaultOpen onOpenChange={onClose}>
         <Dialog.Portal>
           <Dialog.Overlay className="DialogOverlay" />
-          <Dialog.Content className="DialogContent">
+          <Dialog.Content className="DialogContent" onEscapeKeyDown={console.log("fdfdsfdsf")}>
             <Dialog.Title className="DialogTitle">Contato</Dialog.Title>
             <br></br>
             <form>
@@ -110,11 +120,11 @@ function Modal({ isOpen, onClose, clientData, handleUpdate, handleCreate})
             </form>
             <div style={{ display: 'flex', marginTop: 25, textAlign:'center', justifyContent: 'flex-end' }} class="justify-content-center align-items-center">
               <Dialog.Close asChild>
-                <button class="Button" onClick={confirm}>Salvar</button>
+                <button class="Button green" onClick={confirm}>Salvar</button>
               </Dialog.Close>
             </div>
             <Dialog.Close asChild>
-              <button className="IconButton" aria-label="Close">
+              <button class="IconButton" aria-label="Close">
                 <Cross2Icon />
               </button>
             </Dialog.Close>

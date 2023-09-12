@@ -1,3 +1,9 @@
+@import '@radix-ui/colors/black-alpha.css';
+@import '@radix-ui/colors/green.css';
+@import '@radix-ui/colors/mauve.css';
+@import '@radix-ui/colors/violet.css';
+@import '@radix-ui/colors/gray.css';
+
 
 .DialogOverlay {
     background-color: var(--black-a9);
@@ -49,8 +55,6 @@
     line-height: 1;
     font-weight: 500;
     height: 35px;
-    color: rgb(24, 121, 78);
-    background-color: rgb(221, 243, 228);
   }
   .Button.violet {
     background-color: white;
@@ -82,16 +86,15 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--violet-11);
     position: absolute;
     top: 10px;
     right: 10px;
   }
   .IconButton:hover {
-    background-color: var(--violet-4);
+    background-color: var(--gray-3);
   }
   .IconButton:focus {
-    box-shadow: 0 0 0 2px var(--violet-7);
+    box-shadow: 0 0 0 2px var(--gray-3);
   }
   
   .Fieldset {

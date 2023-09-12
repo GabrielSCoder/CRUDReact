@@ -20,6 +20,6 @@ export function patternNumber(inpt) {
     } else {
           newNumber = newNumber.replace(/^(\d*)/, "($1");
     }
-    console.log(newNumber.length)
+    console.log(newNumber)
     return newNumber;
 }

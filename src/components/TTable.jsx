@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import RadiModal from './RadiModal';
 import TableHead from './TableHead';
 import AlertDialog from './Alert';
+import { CheckCircledIcon ,CrossCircledIcon } from '@radix-ui/react-icons';
 
 const url = "https://api.box3.work/api/Contato";
 const token = "6d573016-d980-4275-b513-60b6e3c1e9fb";
@@ -12,10 +13,9 @@ function ShowTable(props)
 
     return (
         <>
-        <main class="d-flex flex-column align-items-center shadow p-3 m-2" style={{ minheight: '70vh', width: '100%' }}>
-            <button type="button" class="btn btn-dark mb-1" id="Cadastro" onClick={() => openModal("")}>Cadastrar Contato</button>
-            <br></br>
-            <table class="w-100 table-striped table" id="table">
+        <main class="d-flex flex-column align-items-start shadow p-3 m-2" style={{ minheight: '70vh', width: '100%' }}>
+            <button type="button" class="btn btn-dark mb-1 ml-3 btn-sm" id="Cadastro" onClick={() => openModal("")}>Cadastrar Contato</button>
+            <table class="w-100 table-striped table mt-2" id="table">
             <thead>
                 <tr>
                 <TableHead label="Nome" />
@@ -28,17 +28,20 @@ function ShowTable(props)
             </thead>
             <tbody>
                 {dados.map((item) => (
+                <>
                 <tr key={item.id}>
                     <td className="p-2">{item.nome}</td>
                     <td>{item.telefone}</td>
                     <td>{item.email}</td>
-                    <td className="text-center">{item.ativo ? <span>Ativado</span> : <span>Desativado</span>}</td>
+                    <td className="text-center">{item.ativo ? <CheckCircledIcon/> : <CrossCircledIcon/>}</td>
                     <td className="text-center">{new Date(item.dataNascimento).toLocaleDateString("pt-BR")}</td>
                     <td className="d-flex justify-content-between">
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => openModal(item)}>Editar</button>
-                    <button type="button" className="btn btn-danger btn-sm" onClick={() => confirmDelete(item.id)}>Excluir</button>
+                        <button class="btn btn-success btn-sm" onClick={""}>Chamar</button>
+                        <button class="btn btn-secondary btn-sm" onClick={() => openModal(item)}>Editar</button>
+                        <button class="btn btn-danger btn-sm" onClick={() => confirmDelete(item.id)}>Excluir</button>
                     </td>
                 </tr>
+                </>
                 ))}
             </tbody>
             </table>    
