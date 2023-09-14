@@ -90,7 +90,7 @@ function Modal({ isOpen, onClose, clientData, handleUpdate, handleCreate})
         <Dialog.Root defaultOpen onOpenChange={onClose}>
         <Dialog.Portal>
           <Dialog.Overlay className="DialogOverlay" />
-          <Dialog.Content className="DialogContent" onEscapeKeyDown={console.log("fdfdsfdsf")}>
+          <Dialog.Content className="DialogContent">
             <Dialog.Title className="DialogTitle">Contato</Dialog.Title>
             <br></br>
             <form>

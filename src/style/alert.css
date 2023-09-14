@@ -57,6 +57,18 @@ button {
   font-weight: 500;
   height: 35px;
 }
+
+.Button.green {
+  background-color: var(--green-4);
+  color: var(--green-11);
+}
+.Button.green:hover {
+  background-color: var(--green-5);
+}
+.Button.green:focus {
+  box-shadow: 0 0 0 2px var(--green-7);
+}
+
 .Button.violet {
   background-color: white;
   color: var(--violet-11);
