@@ -1,4 +1,4 @@
-import { Fragment } from "react"
+import React from "react"
 export default function Head() {
  return (
     <header class="text-center py-2 bg-secondary w-100">

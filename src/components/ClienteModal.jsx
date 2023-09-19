@@ -1,10 +1,10 @@
 import React, { useState ,useEffect } from "react";
-import {formatter, patternNumber} from "../services/script.js";
+import {formatter, patternNumber} from "../utils/mascaraNumero.js";
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import "../style/radMod.css";
 
-function Modal({ isOpen, onClose, clientData, handleUpdate, handleCreate})
+function ClienteModal({ isOpen, onClose, clientData, handleUpdate, handleCreate, setDados})
 {   
     const isEditing = !!clientData;
     const [originalClientData] = useState(clientData || {});
@@ -77,11 +77,10 @@ function Modal({ isOpen, onClose, clientData, handleUpdate, handleCreate})
         
         if(isEditing)
         {
-            handleUpdate(clientData.id, finalClient);
+            handleUpdate(clientData.id, finalClient, setDados);
         } else {
-            handleCreate(finalClient);
+            handleCreate(finalClient, setDados);
         }
-
         onClose();
     };
 
@@ -114,9 +113,10 @@ function Modal({ isOpen, onClose, clientData, handleUpdate, handleCreate})
                     defaultValue={isEditing ? clientData.dataNascimento.substring(0, 10) : ""}
                     onChange={(e) => setNascimento(e.target.value)} required/>
                 </fieldset>
-                  <fieldset class="Fieldset w-100 justify-content-center align-items-center">
-                      <input type="checkbox" id="ativo" checked={ativo} onChange={(e) => setAtivo(e.target.checked)}/>
-                  </fieldset>
+                  <div class="d-flex flex-column justify-content-center align-items-center">
+                      <div><h7>Ativo</h7></div>
+                      <div><input type="checkbox" id="ativo" checked={ativo} onChange={(e) => setAtivo(e.target.checked)}/></div>
+                  </div>
             </form>
             <div style={{ display: 'flex', marginTop: 25, textAlign:'center', justifyContent: 'flex-end' }} class="justify-content-center align-items-center">
               <Dialog.Close asChild>
@@ -134,4 +134,4 @@ function Modal({ isOpen, onClose, clientData, handleUpdate, handleCreate})
     )
 }
 
-export default Modal
+export default ClienteModal

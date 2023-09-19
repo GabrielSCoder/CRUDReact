@@ -1,12 +1,10 @@
 import React, {useState, useEffect} from "react";
-import ShowSubject from "./Subject";
+import AssuntoModal from "./AssuntoModal";
 import * as Dialog from '@radix-ui/react-dialog';
 import "../style/radMod.css";
 
-const urlContato = "https://api.box3.work/api/Telefone";
-const token = "6d573016-d980-4275-b513-60b6e3c1e9fb";
 
-function CallModal({isOpen, onClose, tempoFormatado , HandleFinishCall})
+function ChamadaModal({isOpen, onClose, tempoFormatado, callData, setId, setOnCall, setCallData})
 {
     const [isSubjectOpen, setSubjectOpen] = useState(false)
 
@@ -50,34 +48,16 @@ function CallModal({isOpen, onClose, tempoFormatado , HandleFinishCall})
             </Dialog.Portal>
         </Dialog.Root>
         {isSubjectOpen && (
-            <ShowSubject isOpen={isSubjectOpen} onClose={closeSubjectModal} HandleFinishCall={HandleFinishCall} />
+            <AssuntoModal isOpen={isSubjectOpen} onClose={closeSubjectModal} callData={callData} setId={setId} 
+            setOnCall={setOnCall} setCallData={setCallData} />
         )}
     </>
     )
 }
 
-function Call({callData, checkCall, tempoFormatado, isModalOpen, closeCallModal})
+function Chamada({callData, tempoFormatado, isModalOpen, closeCallModal, setId, setOnCall, setCallData})
 {
     const [isOpen, setIsOpen] = useState(false);
-
-    const HandleFinishCall = (assunto) => {
-
-        const body = {
-            assunto : assunto
-        }
-
-        fetch(`${urlContato}/${token}/${callData.id}`, {
-            method: "PUT",
-            body: JSON.stringify(body),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
-        .then(() => {
-            checkCall()
-        })
-        .catch(() => { console.log("Ocorreu um erro na atualização.") })
-    }
 
     const openModal = () => {
         setIsOpen(true)
@@ -88,10 +68,9 @@ function Call({callData, checkCall, tempoFormatado, isModalOpen, closeCallModal}
     };
 
     return (
-        <>
-        <CallModal isOpen={isModalOpen} onClose={closeCallModal} tempoFormatado={tempoFormatado} HandleFinishCall={HandleFinishCall}/>     
-        </>
+        <ChamadaModal isOpen={isModalOpen} onClose={closeCallModal} tempoFormatado={tempoFormatado} callData={callData}
+        setId={setId} setOnCall={setOnCall} setCallData={setCallData}/>     
     )
 }
 
-export default Call
+export default Chamada

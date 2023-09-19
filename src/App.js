@@ -1,5 +1,5 @@
-import Head from './components/Head'
-import TTable from './components/TTable'
+import Cabecalho from './components/Cabecalho'
+import Tabela from './pages/Tabela'
 
 import './style/index.css'
 
@@ -7,8 +7,8 @@ function myApp()
 {
     return (
         <>
-            <Head />
-            <TTable />
+            <Cabecalho />
+            <Tabela />
         </>
     )
 }

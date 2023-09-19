@@ -1,8 +1,12 @@
 import React, {useState} from 'react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import useDebounce from '../utils/debounce';
 import '../style/alert.css';
 
-function AlertDialogDemo({ isOpen, onClose, onConfirmDelete }) {
+function AlertaExclusao({ isOpen, onClose, onConfirmDelete }) {
+
+    const confirmDeleteDebounce = useDebounce(onConfirmDelete, 3000)
+
     return (
     <AlertDialog.Root open={isOpen} onOpenChange={onClose}>
         <AlertDialog.Portal>
@@ -17,7 +21,7 @@ function AlertDialogDemo({ isOpen, onClose, onConfirmDelete }) {
                 <button className="Button mauve">Cancelar</button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
-                <button className="Button red" onClick={onConfirmDelete}>Sim, deletar contato</button>
+                <button className="Button red" onClick={confirmDeleteDebounce}>Sim, deletar contato</button>
             </AlertDialog.Action>
             </div>
         </AlertDialog.Content>
@@ -26,5 +30,5 @@ function AlertDialogDemo({ isOpen, onClose, onConfirmDelete }) {
     )
 }
 
-export default AlertDialogDemo;
+export default AlertaExclusao;
 

@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CheckCircledIcon ,CrossCircledIcon, TrashIcon, GearIcon, MagnifyingGlassIcon, LockClosedIcon, ChatBubbleIcon } from '@radix-ui/react-icons';
-import RadiModal from './RadiModal';
-import TableHead from './TableHead';
-import AlertDialog from './Alert';
-import Call from './Calling';
-import atualizarCronometro from '../services/cronomoter.js';
+import ClienteModal from './ClienteModal';
+import TdCabecalho from './TdCabecalho';
+import Alerta from './Alerta';
+import Chamada from './Chamada';
+import atualizarCronometro from '../utils/cronometro.js';
 
 const url = "https://api.box3.work/api/Contato";
 const urlContato = "https://api.box3.work/api/Telefone";
 const token = "6d573016-d980-4275-b513-60b6e3c1e9fb";
 
-function ShowTable(props) 
+function MostrarTabela(props) 
 {
     const {dados, openModal, newCall, onCall, confirmDelete, openCallModal, id, setCallModalOpen} = props
 
@@ -21,12 +21,12 @@ function ShowTable(props)
             <table class="w-100 table-striped table mt-2" id="table">
             <thead>
                 <tr>
-                <TableHead label="Nome" />
-                <TableHead label="Telefone" />
-                <TableHead label="Email" />
-                <TableHead label="Ativo" />
-                <TableHead label="Data Nascimento" />
-                <TableHead label="Opções" />
+                <TdCabecalho label="Nome" />
+                <TdCabecalho label="Telefone" />
+                <TdCabecalho label="Email" />
+                <TdCabecalho label="Ativo" />
+                <TdCabecalho label="Data Nascimento" />
+                <TdCabecalho label="Opções" />
                 </tr>
             </thead>
             <tbody>
@@ -81,13 +81,11 @@ function InitTable()
                     setCallData(res);
                     setId(res.contato.id);
                     setOnCall(true);
-                    return true;
                 })
             } else {
                 setCallData([]);
                 setId("");
                 setOnCall(false);
-                return false
             }
         })
     };
@@ -238,12 +236,12 @@ function InitTable()
         <div>
             {dados.length > 0 ? (
                 <>
-                <ShowTable dados={dados} openModal={openModal} openCallModal={openCallModal} newCall={newCall} confirmDelete={confirmDelete} onCall={onCall} id={id} setCallModal={setCallModal}/>
-                <RadiModal isOpen={isModalOpen} onClose={closeModal} handleUpdate={handleUpdate} clientData={clientData} handleCreate={handleCreate}/>
-                <AlertDialog isOpen={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} onConfirmDelete={onConfirmDelete}/>
+                <MostrarTabela dados={dados} openModal={openModal} openCallModal={openCallModal} newCall={newCall} confirmDelete={confirmDelete} onCall={onCall} id={id} setCallModal={setCallModal}/>
+                <ClienteModal isOpen={isModalOpen} onClose={closeModal} handleUpdate={handleUpdate} clientData={clientData} handleCreate={handleCreate}/>
+                <Alerta isOpen={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} onConfirmDelete={onConfirmDelete}/>
                 {onCall ? (
                     <>
-                    <Call callData={callData} clienteId={clientData} checkCall={checkCall} tempoFormatado={tempoFormatado} isModalOpen={callModal} closeCallModal={closeCallModal}/>
+                    <Chamada callData={callData} clienteId={clientData} checkCall={checkCall} tempoFormatado={tempoFormatado} isModalOpen={callModal} closeCallModal={closeCallModal}/>
                     
                     </>
                 ) : ""}
