@@ -1,6 +1,6 @@
-table {
-    border-spacing: 5px; 
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 *{
     padding: 0;

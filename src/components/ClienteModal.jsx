@@ -3,6 +3,7 @@ import {formatter, patternNumber} from "../utils/mascaraNumero.js";
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import "../style/radMod.css";
+import toastShow from '../utils/mostrarToast.js';
 
 function ClienteModal({ isOpen, onClose, clientData, handleUpdate, handleCreate, setDados})
 {   
@@ -78,8 +79,10 @@ function ClienteModal({ isOpen, onClose, clientData, handleUpdate, handleCreate,
         if(isEditing)
         {
             handleUpdate(clientData.id, finalClient, setDados);
+            toastShow("Cliente atualizado!")
         } else {
             handleCreate(finalClient, setDados);
+            toastShow("Cliente criado!")
         }
         onClose();
     };

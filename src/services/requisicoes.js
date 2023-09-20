@@ -34,8 +34,7 @@ export const handleDelete = async (clientId, dados, setDados) => {
     try {
         await axios.delete(`${urlBase}/Contato/${token}/${clientId}`)
         await setDados(dados.filter(item => item.id !== clientId))
-        await setDados([])
-        await getClients(setDados)
+        //await getClients(setDados)
     } catch (error) {
         throw error;
     }

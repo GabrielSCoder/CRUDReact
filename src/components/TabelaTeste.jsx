@@ -1,57 +1,65 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { CheckCircledIcon ,CrossCircledIcon, TrashIcon, GearIcon, MagnifyingGlassIcon, LockClosedIcon, ChatBubbleIcon } from '@radix-ui/react-icons';
-import ClienteModal from './ClienteModal';
-import TdCabecalho from './TdCabecalho';
-import Alerta from './Alerta';
-import Chamada from './Chamada';
+import {getClients, handleCreate, handleDelete, handleUpdate, handleCreateCall,checkCall} from "../services/requisicoes"
+import React, { useState, useEffect, useRef } from 'react';
 import atualizarCronometro from '../utils/cronometro.js';
-
-const url = "https://api.box3.work/api/Contato";
-const urlContato = "https://api.box3.work/api/Telefone";
-const token = "6d573016-d980-4275-b513-60b6e3c1e9fb";
+import {ToastContainer, toast } from 'react-toastify';
+import ClienteModal from '../components/ClienteModal';
+import TdCabecalho from '../components/TdCabecalho';
+import Chamada from '../components/Chamada';
+import useDebounce from '../utils/debounce';
+import Alerta from '../components/Alerta';
+import toastShow from '../utils/mostrarToast';
 
 function MostrarTabela(props) 
 {
     const {dados, openModal, newCall, onCall, confirmDelete, openCallModal, id, setCallModalOpen} = props
 
+    const newCallDebounce = useDebounce(newCall, 1000)
+
     return (
         <>
-        <main class="d-flex flex-column align-items-start shadow p-3 m-2" style={{ minheight: '70vh', width: '100%' }}>
-            <button type="button" class="btn btn-dark mb-1 ml-3 btn-sm" id="Cadastro" onClick={() => openModal("")}>Cadastrar Contato</button>
-            <table class="w-100 table-striped table mt-2" id="table">
-            <thead>
-                <tr>
-                <TdCabecalho label="Nome" />
-                <TdCabecalho label="Telefone" />
-                <TdCabecalho label="Email" />
-                <TdCabecalho label="Ativo" />
-                <TdCabecalho label="Data Nascimento" />
-                <TdCabecalho label="Opções" />
-                </tr>
-            </thead>
-            <tbody>
-                {dados.map((item) => (
-                <>
-                <tr key={item.id}>
-                    <td className="p-2">{item.nome}</td>
-                    <td>{item.telefone}</td>
-                    <td>{item.email}</td>
-                    <td className="text-center">{item.ativo ? <CheckCircledIcon/> : <CrossCircledIcon/>}</td>
-                    <td className="text-center">{new Date(item.dataNascimento).toLocaleDateString("pt-BR")}</td>
-                    <td className="d-flex justify-content-between">
-                        {onCall && item.id === id ? (
-                            <button class="btn btn-success btn-sm" onClick={() => openCallModal(item.id)}><MagnifyingGlassIcon /></button>  
-                            ) : (
-                            <button class="btn btn-success btn-sm" onClick={() => newCall(item.id)} disabled={(onCall && item.id !== id) || !item.ativo}>
-                                {(!item.ativo || (onCall && item.id !== id)) ? <LockClosedIcon /> : <ChatBubbleIcon />}</button>
-                        )}
-                        <button class="btn btn-secondary btn-sm" onClick={() => openModal(item)} disabled={item.id === id}><GearIcon /></button>
-                        <button class="btn btn-danger btn-sm" onClick={() => confirmDelete(item.id)} disabled={item.id === id} ><TrashIcon /></button>
-                    </td>
-                </tr>
-                </>
-                ))}
-            </tbody>
+        <main class="w-full flex flex-col items-start shadow p-3 m-2 min-h-[70vh] ">
+            <div className='flex w-full flex-row gap-3 items-center justify-between mt-2'>
+                <div className='py-1'> 
+                    <h1 className='font-medium'>Contatos</h1>
+                    <p className='text-small font-small py-1'>Lista de todos os clientes contendo suas informações</p>
+                </div>
+                <button type="button" className="rounded-md bg-blue-600 text-white p-1 hover:bg-blue-500" onClick={() => openModal("")}>Cadastrar Contato</button>
+            </div>
+            <table class="min-w-full font-light mt-4">
+                <thead class="border-b font-medium dark:border-neutral-500">
+                    <tr>
+                    <TdCabecalho label="Nome" />
+                    <TdCabecalho label="Telefone" />
+                    <TdCabecalho label="Email" />
+                    <TdCabecalho label="Ativo" />
+                    <TdCabecalho label="Data Nascimento" />
+                    <TdCabecalho label="Opções" />
+                    </tr>
+                </thead>
+                <tbody>
+                    {dados.map((item) => (
+                    <tr key={item.id} class="border-b dark:border-neutral-500">
+                        <td className="p-2 text-sm font-medium py-3">{item.nome}</td>
+                        <td className='text-sm font-medium text-slate-500 text-center'>{item.telefone}</td>
+                        <td className='text-sm font-medium text-slate-500'>{item.email}</td>
+                        <td class="whitespace-nowrap text-center px-5">{item.ativo ? <CheckCircledIcon/> : <CrossCircledIcon/>}</td>
+                        <td className="text-center text-sm font-medium text-slate-500">{new Date(item.dataNascimento).toLocaleDateString("pt-BR")}</td>
+                        <td className='justify-items-center items-center'>
+                            <div className="flex items-center space-x-3 px-3">
+                                {onCall && item.id === id ? (
+                                    <button class="rounded-md bg-green-700 hover:bg-green-800 text-white p-2" onClick={() => openCallModal(item.id)}><MagnifyingGlassIcon /></button>  
+                                    ) : (
+                                    <button class="rounded-md bg-green-700 hover:bg-green-800 text-white p-2 disabled:opacity-75" onClick={() => newCallDebounce(item.id)} disabled={(onCall && item.id !== id) || !item.ativo}>
+                                        {(!item.ativo || (onCall && item.id !== id)) ? <LockClosedIcon /> : <ChatBubbleIcon />}</button>
+                                )}
+                                <button class="rounded-md bg-gray-400 hover:bg-gray-600 text-white p-2" onClick={() => openModal(item)} disabled={item.id === id}><GearIcon /></button>
+                                <button class="rounded-md bg-red-700 hover:bg-red-800 text-white p-2" onClick={() => confirmDelete(item.id)} disabled={item.id === id} ><TrashIcon /></button>
+                            </div>
+                        </td>
+                    </tr>
+                    ))}
+                </tbody>
             </table>    
         </main>
         </>
@@ -72,51 +80,6 @@ function InitTable()
     const [id, setId] = useState("");
     let crono = useRef(null)
 
-    const checkCall = () => {
-        return fetch(`${urlContato}/${token}/chamada-em-andamento`)
-        .then(reponse => {
-            if (reponse.ok) {
-                return reponse.json()
-                .then(res => {
-                    setCallData(res);
-                    setId(res.contato.id);
-                    setOnCall(true);
-                })
-            } else {
-                setCallData([]);
-                setId("");
-                setOnCall(false);
-            }
-        })
-    };
-
-    const handleCreateCall = (data) => {
-
-        const body = {
-            idContato: data
-        };
-    
-        fetch(`${urlContato}/${token}`, {
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Erro na requisição');
-            }
-        })
-        .then(() => {checkCall()})
-        .catch(error => {
-            console.error(error);
-        });
-    };
-    
-    
     const openModal = (client) => {
         setClientData(client);
         setIsModalOpen(true);
@@ -128,7 +91,6 @@ function InitTable()
 
     const openCallModal = (id) => {
         setCallModal(true);
-        console.log("abriu");
     }
 
     const closeCallModal = () => {
@@ -136,66 +98,11 @@ function InitTable()
     }
 
     const newCall = (id) => {
-        setId(dados.id);
-        handleCreateCall(id);
+        setId(dados.id)
+        handleCreateCall(id, setId, setCallData, setOnCall)
+        toastShow("Chamada iniciada!")
     }
-
-    const fecthData = () => 
-    {
-        fetch(`${url}/${token}`)
-         .then(res => res.json())
-         .then(dados => {
-            setDados(dados);
-         })
-    }
-
-    const handleCreate = (data) => {
-        fetch(`${url}/${token}`, {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
-        .then(() => {
-            fecthData()
-        })
-        .catch((e) => { console.error(e) })
-    }    
-
-    const handleDelete = (clientId) =>
-    {
-        fetch(`${url}/${token}/${clientId}`, {
-            method: 'DELETE',
-        }).then(response => {
-            if (response.status === 200)
-            {
-                setDados(dados.filter(item => item.id !== clientId))
-                setDados([])
-                fecthData()
-            } else 
-            {
-                console.log("erro na exclusão")
-            }
-        }).catch(error => {
-            console.error(error)
-        })
-    }
-
-    const handleUpdate = (id,data) => {
-        fetch(`${url}/${token}/${id}`, {
-            method: "PUT",
-            body: JSON.stringify(data),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
-        .then(() => {
-            fecthData()
-        })
-        .catch(() => { console.log("Ocorreu um erro na atualização.") })
-    }
-
+ 
     const confirmDelete = (id) => {
         setClientData(id);
         setShowDeleteDialog(true);
@@ -203,14 +110,15 @@ function InitTable()
 
     const onConfirmDelete = () => {
         if (clientData) {
-            handleDelete(clientData);
+            handleDelete(clientData, dados,setDados );
         }
         setShowDeleteDialog(false);
+        toastShow("Cliente deletado")
     };
 
     useEffect(() => {
-        fecthData();
-        checkCall();
+        getClients(setDados);
+        checkCall(setId, setCallData, setOnCall);
     }, []);
 
     useEffect(() => {
@@ -237,14 +145,15 @@ function InitTable()
             {dados.length > 0 ? (
                 <>
                 <MostrarTabela dados={dados} openModal={openModal} openCallModal={openCallModal} newCall={newCall} confirmDelete={confirmDelete} onCall={onCall} id={id} setCallModal={setCallModal}/>
-                <ClienteModal isOpen={isModalOpen} onClose={closeModal} handleUpdate={handleUpdate} clientData={clientData} handleCreate={handleCreate}/>
+                <ClienteModal isOpen={isModalOpen} onClose={closeModal} handleUpdate={handleUpdate} clientData={clientData} handleCreate={handleCreate} setDados={setDados}/>
                 <Alerta isOpen={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} onConfirmDelete={onConfirmDelete}/>
                 {onCall ? (
                     <>
-                    <Chamada callData={callData} clienteId={clientData} checkCall={checkCall} tempoFormatado={tempoFormatado} isModalOpen={callModal} closeCallModal={closeCallModal}/>
-                    
+                    <Chamada callData={callData} tempoFormatado={tempoFormatado} isModalOpen={callModal} closeCallModal={closeCallModal} 
+                    setId={setId} setOnCall={setOnCall} setCallData={setCallData}/>
                     </>
                 ) : ""}
+                <ToastContainer />
                 </>
             ) : (
                 <p>Carregando dados...</p>

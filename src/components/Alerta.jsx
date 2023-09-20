@@ -5,7 +5,7 @@ import '../style/alert.css';
 
 function AlertaExclusao({ isOpen, onClose, onConfirmDelete }) {
 
-    const confirmDeleteDebounce = useDebounce(onConfirmDelete, 3000)
+    const confirmDeleteDebounce = useDebounce(onConfirmDelete, 1000)
 
     return (
     <AlertDialog.Root open={isOpen} onOpenChange={onClose}>

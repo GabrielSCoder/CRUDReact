@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
 import { CheckCircledIcon ,CrossCircledIcon, TrashIcon, GearIcon, MagnifyingGlassIcon, LockClosedIcon, ChatBubbleIcon } from '@radix-ui/react-icons';
+import {getClients, handleCreate, handleDelete, handleUpdate, handleCreateCall,checkCall} from "../services/requisicoes"
+import React, { useState, useEffect, useRef } from 'react';
+import atualizarCronometro from '../utils/cronometro.js';
+import {ToastContainer, toast } from 'react-toastify';
 import ClienteModal from '../components/ClienteModal';
 import TdCabecalho from '../components/TdCabecalho';
-import Alerta from '../components/Alerta';
 import Chamada from '../components/Chamada';
-import atualizarCronometro from '../utils/cronometro.js';
-import {getClients, handleCreate, handleDelete, handleUpdate, handleCreateCall,checkCall} from "../services/requisicoes"
 import useDebounce from '../utils/debounce';
-import "react-toastify/dist/ReactToastify.css";
-import {ToastContainer, toast } from 'react-toastify';
+import Alerta from '../components/Alerta';
+import toastShow from '../utils/mostrarToast';
 
 function MostrarTabela(props) 
 {
@@ -79,10 +79,6 @@ function InitTable()
     const [id, setId] = useState("");
     let crono = useRef(null)
 
-    const showToast = (texto) => {
-        toast(texto)
-    }
-
     const openModal = (client) => {
         setClientData(client);
         setIsModalOpen(true);
@@ -103,7 +99,7 @@ function InitTable()
     const newCall = (id) => {
         setId(dados.id)
         handleCreateCall(id, setId, setCallData, setOnCall)
-        showToast("Nova chamada criada!")
+        toastShow("Chamada iniciada!")
     }
  
     const confirmDelete = (id) => {
@@ -116,6 +112,7 @@ function InitTable()
             handleDelete(clientData, dados,setDados );
         }
         setShowDeleteDialog(false);
+        toastShow("Cliente deletado")
     };
 
     useEffect(() => {
@@ -151,11 +148,11 @@ function InitTable()
                 <Alerta isOpen={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} onConfirmDelete={onConfirmDelete}/>
                 {onCall ? (
                     <>
-                    <ToastContainer />
                     <Chamada callData={callData} tempoFormatado={tempoFormatado} isModalOpen={callModal} closeCallModal={closeCallModal} 
                     setId={setId} setOnCall={setOnCall} setCallData={setCallData}/>
                     </>
                 ) : ""}
+                <ToastContainer />
                 </>
             ) : (
                 <p>Carregando dados...</p>

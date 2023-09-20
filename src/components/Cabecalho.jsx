@@ -1,8 +1,8 @@
 import React from "react"
 export default function Head() {
  return (
-    <header class="text-center py-2 bg-secondary w-100">
-        <h3 class="text-white">Contatos</h3>
+    <header class="text-center py-2 bg-slate-400 w-full">
+        <h3 className="text-3xl text-white font-bold">Contatos</h3>
     </header>
  )
 }

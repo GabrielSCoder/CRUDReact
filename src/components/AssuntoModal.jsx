@@ -1,10 +1,16 @@
 import React, {useState, useEffect} from "react";
 import * as Dialog from '@radix-ui/react-dialog';
 import { HandleFinishCall } from "../services/requisicoes";
+import toastShow from "../utils/mostrarToast";
 
 function MostrarAssunto({callData, isOpen, onClose, setId, setOnCall, setCallData})
 {
     const [assunto, setAssunto] = useState("");
+
+    const finish = (callData, assunto, setId, setOnCall, setCallData) => {
+        HandleFinishCall(callData, assunto, setId, setOnCall, setCallData)
+        toastShow("Chamada encerrada!")
+    }
 
     useEffect(() =>{
 
@@ -26,7 +32,7 @@ function MostrarAssunto({callData, isOpen, onClose, setId, setOnCall, setCallDat
                 <div style={{ display: 'flex', marginTop: 25, textAlign:'center', justifyContent: 'flex-end', gap: 10 }}
                  class="justify-content-center align-items-center">
                     <Dialog.Close asChild>
-                        <input type="button" class="Button green" onClick={() => HandleFinishCall(callData, assunto, setId, setOnCall, setCallData)} value="Confirmar" />
+                        <input type="button" class="Button green" onClick={() => finish(callData, assunto, setId, setOnCall, setCallData)} value="Confirmar" />
                     </Dialog.Close>                                                                
                     <Dialog.Close asChild>
                         <input type="button" class="Button red" value="Cancelar" />
