@@ -20,14 +20,14 @@ function MostrarTabela(props)
         <>
         <main class="w-full flex flex-col items-start shadow p-3 m-2 min-h-[70vh] ">
             <div className='flex w-full flex-row gap-3 items-center justify-between mt-2'>
-                <div className='py-1'> 
-                    <h1 className='font-medium'>Contatos</h1>
-                    <p className='text-small font-small py-1'>Lista de todos os clientes contendo suas informações</p>
+                <div className='py-1 font-serif'> 
+                    <h1 className='font-bold'>Contatos</h1>
+                    <h2 className='text-sm font-medium py-1'>Lista de todos os contatos contendo suas informações.</h2>
                 </div>
-                <button type="button" className="rounded-md bg-blue-600 text-white p-1 hover:bg-blue-500" onClick={() => openModal("")}>Cadastrar Contato</button>
+                <button type="button" className="rounded-md bg-indigo-600 px-2 text-white p-1 hover:bg-blue-500" onClick={() => openModal("")}>Cadastrar Contato</button>
             </div>
-            <table class="min-w-full font-light mt-4">
-                <thead class="border-b font-medium dark:border-neutral-500">
+            <table class="min-w-full mt-4">
+                <thead class="border-b">
                     <tr>
                     <TdCabecalho label="Nome" />
                     <TdCabecalho label="Telefone" />
@@ -37,24 +37,24 @@ function MostrarTabela(props)
                     <TdCabecalho label="Opções" />
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className='font-serif'>
                     {dados.map((item) => (
-                    <tr key={item.id} class="border-b dark:border-neutral-500">
+                    <tr key={item.id} class="border-b">
                         <td className="p-2 text-sm font-medium py-3">{item.nome}</td>
                         <td className='text-sm font-medium text-slate-500 text-center'>{item.telefone}</td>
-                        <td className='text-sm font-medium text-slate-500'>{item.email}</td>
+                        <td className='text-sm font-medium text-slate-500 px-2'>{item.email}</td>
                         <td class="whitespace-nowrap text-center px-5">{item.ativo ? <CheckCircledIcon/> : <CrossCircledIcon/>}</td>
                         <td className="text-center text-sm font-medium text-slate-500">{new Date(item.dataNascimento).toLocaleDateString("pt-BR")}</td>
                         <td className='justify-items-center items-center'>
                             <div className="flex items-center space-x-3 px-3">
                                 {onCall && item.id === id ? (
-                                    <button class="rounded-md bg-green-700 hover:bg-green-800 text-white p-2" onClick={() => openCallModal(item.id)}><MagnifyingGlassIcon /></button>  
+                                    <button class="rounded-md hover:bg-green-800 hover:text-white text-green-700 p-2" onClick={() => openCallModal(item.id)}><MagnifyingGlassIcon /></button>  
                                     ) : (
-                                    <button class="rounded-md bg-green-700 hover:bg-green-800 text-white p-2 disabled:opacity-75" onClick={() => newCallDebounce(item.id)} disabled={(onCall && item.id !== id) || !item.ativo}>
-                                        {(!item.ativo || (onCall && item.id !== id)) ? <LockClosedIcon /> : <ChatBubbleIcon />}</button>
+                                    <button class="rounded-md hover:bg-green-800 hover:text-white text-green-700 p-2 disabled:opacity-75" onClick={() => newCallDebounce(item.id)} disabled={(onCall && item.id !== id) || !item.ativo}>
+                                        {(!item.ativo || (onCall && item.id !== id)) ? <LockClosedIcon/> : <ChatBubbleIcon />}</button>
                                 )}
-                                <button class="rounded-md bg-gray-400 hover:bg-gray-600 text-white p-2" onClick={() => openModal(item)} disabled={item.id === id}><GearIcon /></button>
-                                <button class="rounded-md bg-red-700 hover:bg-red-800 text-white p-2" onClick={() => confirmDelete(item.id)} disabled={item.id === id} ><TrashIcon /></button>
+                                <button class="rounded-md hover:bg-gray-600 hover:text-white text-gray-400 p-2" onClick={() => openModal(item)} disabled={item.id === id}><GearIcon /></button>
+                                <button class="rounded-md hover:bg-red-800 hover:text-white text-red-700 p-2" onClick={() => confirmDelete(item.id)} disabled={item.id === id} ><TrashIcon /></button>
                             </div>
                         </td>
                     </tr>

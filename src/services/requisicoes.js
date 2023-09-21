@@ -1,11 +1,11 @@
-import axios from 'axios'
-
+import getAxios from './configAxios'
 const urlBase = "https://api.box3.work/api"
 const token = "6d573016-d980-4275-b513-60b6e3c1e9fb"
 
 export const getClients = async (setDados) => {
     try {
-        const response = await axios.get(`${urlBase}/Contato/${token}`)
+        const axiosInstance = await getAxios();
+        const response = await axiosInstance.get(`${urlBase}/Contato/${token}`)
         await setDados(response.data)
     } catch (error) {
         throw error
@@ -14,7 +14,8 @@ export const getClients = async (setDados) => {
 
 export const handleCreate = async (data, setDados) => {
     try {
-        await axios.post(`${urlBase}/Contato/${token}`, data)
+        const axiosInstance = await getAxios();
+        await axiosInstance.post(`${urlBase}/Contato/${token}`, data)
         await getClients(setDados)
     } catch (error) {
         throw error;
@@ -23,7 +24,8 @@ export const handleCreate = async (data, setDados) => {
 
 export const handleUpdate = async (clientId, data, setDados) => {
     try {
-        await axios.put(`${urlBase}/Contato/${token}/${clientId}`, data)
+        const axiosInstance = await getAxios()
+        await axiosInstance.put(`${urlBase}/Contato/${token}/${clientId}`, data)
         await getClients(setDados)
     } catch (error) {
         throw error;
@@ -32,7 +34,8 @@ export const handleUpdate = async (clientId, data, setDados) => {
 
 export const handleDelete = async (clientId, dados, setDados) => {
     try {
-        await axios.delete(`${urlBase}/Contato/${token}/${clientId}`)
+        const axiosInstance = await getAxios()
+        await axiosInstance.delete(`${urlBase}/Contato/${token}/${clientId}`)
         await setDados(dados.filter(item => item.id !== clientId))
         //await getClients(setDados)
     } catch (error) {
@@ -43,7 +46,8 @@ export const handleDelete = async (clientId, dados, setDados) => {
 
 export const checkCall = async (setId, setCallData, setOnCall) => {
     try {
-        const response = await axios.get(`${urlBase}/Telefone/${token}/chamada-em-andamento`)
+        const axiosInstance = await getAxios()
+        const response = await axiosInstance.get(`${urlBase}/Telefone/${token}/chamada-em-andamento`)
         const res = response.data;
         setCallData(res);
         setId(res.contato.id);
@@ -57,7 +61,8 @@ export const checkCall = async (setId, setCallData, setOnCall) => {
 
 export const handleCreateCall = async (id, setId, setCallData, setOnCall) => {
     try {
-        await axios.post(`${urlBase}/Telefone/${token}`, {idContato : id}, {headers: {'Content-Type':'application/json'}})
+        const axiosInstance = await getAxios()
+        await axiosInstance.post(`${urlBase}/Telefone/${token}`, {idContato : id}, {headers: {'Content-Type':'application/json'}})
         await checkCall(setId, setCallData, setOnCall)
     } catch (error) {
         throw error
@@ -66,7 +71,8 @@ export const handleCreateCall = async (id, setId, setCallData, setOnCall) => {
 
 export const HandleFinishCall = async (callData, assunto, setId, setOnCall, setCallData) => {
     try {
-       await axios.put(`${urlBase}/Telefone/${token}/${callData.id}`, {assunto : assunto })
+        const axiosInstance = await getAxios()
+        await axiosInstance.put(`${urlBase}/Telefone/${token}/${callData.id}`, {assunto : assunto })
         await checkCall(setId, setCallData, setOnCall)
     }  catch(error) {
         throw error

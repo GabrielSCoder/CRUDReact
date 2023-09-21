@@ -1,13 +1,12 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import API_URL from './utils/api'
+import { Toast } from '@radix-ui/react-toast';
 
-const getAxios = async (timeout = 30000) => {
+const getAxios = async (baseURL, timeout = 30000) => {
     try {
         const token = localStorage.getItem('@admin_Token');
 
         const instance = axios.create({
-            baseURL: API_URL,
+            baseURL: baseURL,
             timeout: timeout,
             headers: {
                 'Authorization': 'Bearer ' +  token
@@ -16,7 +15,7 @@ const getAxios = async (timeout = 30000) => {
 
         return instance
     } catch (error) {
-        toast.error("Erro na configuração com o servidor")
+        Toast.error("Erro na configuração com o servidor")
     }
 }
 

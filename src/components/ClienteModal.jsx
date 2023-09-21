@@ -91,15 +91,16 @@ function ClienteModal({ isOpen, onClose, clientData, handleUpdate, handleCreate,
     return (
         <Dialog.Root defaultOpen onOpenChange={onClose}>
         <Dialog.Portal>
-          <Dialog.Overlay className="DialogOverlay" />
-          <Dialog.Content className="DialogContent">
+          <Dialog.Overlay className="fixed inset-0 bg-black opacity-50 animate-overlayShow"/>
+          <Dialog.Content className="bg-white p-6 fixed top-1/2 left-1/2  translate-y-[-50%] 
+            translate-x-[-50%] w-[90vh] max-w-[450px] max-h-[85vh] rounded-md shadow-lg shadow-black">
             <Dialog.Title className="DialogTitle">Contato</Dialog.Title>
             <br></br>
             <form>
                 <fieldset className="Fieldset">
-                <input type="text" id="nome" data-index="new" class="form-control" placeholder="Nome"
-                    defaultValue={isEditing ? clientData.nome : ""} onChange={(e) => setNome(e.target.value)}
-                    required/>	
+                  <input type="text" id="nome" data-index="new" class="form-control" placeholder="Nome"
+                      defaultValue={isEditing ? clientData.nome : ""} onChange={(e) => setNome(e.target.value)}
+                      required/>	
                 </fieldset>
                 <fieldset className="Fieldset">
                 <input type="text" id="telefone" class="form-control" placeholder="Telefone" onChange={(e) => {formatter(e, patternNumber); setTelefone(e.target.value);}}
